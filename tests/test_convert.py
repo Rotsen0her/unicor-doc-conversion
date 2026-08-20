@@ -8,7 +8,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from tests.conftest import build_minimal_pdf
+from tests.conftest import build_minimal_pdf, build_pdf_with_image
 
 client = TestClient(app)
 
@@ -105,3 +105,39 @@ def test_convert_with_docling_default_engine():
     assert body["engine_used"] == "docling"
     assert len(body["markdown"].strip()) > 0
     assert "contenido" in body["markdown"].lower()
+
+
+@pytest.mark.slow
+def test_convert_docling_extract_images():
+    """extract_images=true con Docling: la figura debe salir en `assets`
+    (base64, PNG) y el Markdown debe referenciarla con la convención
+    images/{filename}, no con el path absoluto del tempdir del servicio."""
+    pdf = build_pdf_with_image()
+    resp = client.post(
+        "/v1/convert",
+        files={"file": ("figura.pdf", pdf, "application/pdf")},
+        data={"engine": "docling", "extract_images": "true"},
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["engine_used"] == "docling"
+    assert len(body["assets"]) == 1
+    asset = body["assets"][0]
+    assert asset["content_type"] == "image/png"
+    assert len(asset["data_base64"]) > 0
+    assert f"images/{asset['filename']}" in body["markdown"]
+    assert "AppData" not in body["markdown"]  # no debe filtrar el path absoluto del tempdir
+
+
+@pytest.mark.slow
+def test_convert_docling_without_extract_images_has_no_assets():
+    """Comportamiento por defecto (extract_images=false) no debe cambiar."""
+    pdf = build_pdf_with_image()
+    resp = client.post(
+        "/v1/convert",
+        files={"file": ("figura.pdf", pdf, "application/pdf")},
+        data={"engine": "docling", "extract_images": "false"},
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["assets"] == []

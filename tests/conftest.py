@@ -31,3 +31,26 @@ def build_minimal_pdf(text: str = "Hello World") -> bytes:
         out += f"{off:010d} 00000 n \n".encode()
     out += f"trailer<</Size {len(objects) + 1}/Root 1 0 R>>\nstartxref\n{xref_offset}\n%%EOF".encode()
     return bytes(out)
+
+
+def build_pdf_with_image() -> bytes:
+    """PDF de una página con una figura (rectángulo de color) y texto
+    debajo — Docling la detecta como PictureItem separado del texto (ver
+    spike de extract_images). Generado con Pillow, no con texto real
+    seleccionable (por eso no se usa build_minimal_pdf acá).
+
+    El texto NO es cosmético: confirmado en el spike que sin texto en la
+    página, el layout model de Docling no segmenta el rectángulo como
+    Picture (0 elementos detectados) — necesita contraste con otro
+    contenido para clasificar la región como figura."""
+    from io import BytesIO
+
+    from PIL import Image, ImageDraw
+
+    img = Image.new("RGB", (1000, 1400), color="white")
+    draw = ImageDraw.Draw(img)
+    draw.rectangle([100, 100, 900, 500], fill=(200, 50, 50))
+    draw.text((120, 550), "Texto de prueba debajo de la figura", fill="black")
+    buf = BytesIO()
+    img.save(buf, "PDF")
+    return buf.getvalue()

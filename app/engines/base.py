@@ -8,6 +8,15 @@ from typing import List, Protocol
 
 
 @dataclass
+class AssetItem:
+    """Imagen embebida extraída del documento — bytes en base64 porque el
+    servicio es stateless, no persiste nada a disco entre requests."""
+    filename: str
+    content_type: str
+    data_base64: str
+
+
+@dataclass
 class ConversionResult:
     markdown: str
     engine_used: str
@@ -15,7 +24,7 @@ class ConversionResult:
     headings: int
     tables: int
     warnings: List[str] = field(default_factory=list)
-    assets: List[str] = field(default_factory=list)
+    assets: List[AssetItem] = field(default_factory=list)
 
 
 class ConversionEngine(Protocol):

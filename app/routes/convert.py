@@ -26,11 +26,17 @@ class ConvertMetadata(BaseModel):
     warnings: List[str]
 
 
+class ConvertAsset(BaseModel):
+    filename: str
+    content_type: str
+    data_base64: str
+
+
 class ConvertResponse(BaseModel):
     markdown: str
     engine_used: str
     metadata: ConvertMetadata
-    assets: List[str]
+    assets: List[ConvertAsset]
 
 
 @router.get("/engines")
@@ -91,5 +97,8 @@ async def convert(
             tables=result.tables,
             warnings=result.warnings,
         ),
-        assets=result.assets,
+        assets=[
+            ConvertAsset(filename=a.filename, content_type=a.content_type, data_base64=a.data_base64)
+            for a in result.assets
+        ],
     )

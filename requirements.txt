@@ -3,6 +3,10 @@
 docling
 markitdown[pdf]
 
+# Ya llega transitivo vía docling (docling-slim) — explícito porque
+# app/engines/docling_engine.py importa PIL directo para exportar imágenes.
+pillow
+
 # FastAPI y servidor
 fastapi
 uvicorn[standard]

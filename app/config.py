@@ -10,6 +10,13 @@ class Settings(BaseSettings):
     # Límites (ver plan: arrancar en 20-30 MB)
     max_file_size_mb: int = 25
 
+    # Extracción de imágenes embebidas (Fase 4) — caps para no devolver
+    # respuestas gigantes en base64 si un documento trae muchas figuras
+    # grandes; se omite la imagen que exceda y se agrega un warning, nunca
+    # se aborta la conversión completa.
+    max_image_bytes: int = 2_000_000
+    max_images_per_document: int = 30
+
     host: str = "0.0.0.0"
     port: int = 8100
     debug: bool = False
