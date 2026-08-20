@@ -192,8 +192,11 @@ echo -e "   curl http://localhost:8100/health"
 echo -e "   curl -H \"X-Internal-Key: <tu key>\" http://localhost:8100/v1/engines"
 
 echo -e "\n${YELLOW}📌 Pendiente en backend_web_bot:${NC}"
-echo -e "   Configura CONVERSION_SERVICE_URL=http://<esta-ip-o-hostname>:8100"
-echo -e "   y CONVERSION_SERVICE_KEY=<la misma INTERNAL_API_KEY> en su .env."
+echo -e "   Si corre en el mismo servidor compartiendo la red net-shared-conversion:"
+echo -e "     CONVERSION_SERVICE_URL=http://unicor_doc_conversion:8100  (nombre del contenedor, NO localhost ni la IP pública)"
+echo -e "   Si corre fuera de Docker en este mismo host (dev local):"
+echo -e "     CONVERSION_SERVICE_URL=http://localhost:8100"
+echo -e "   En ambos casos: CONVERSION_SERVICE_KEY=<la misma INTERNAL_API_KEY> en su .env."
 
 echo -e "\n${GREEN}✅ unicor-doc-conversion desplegado y listo para recibir peticiones${NC}\n"
 
