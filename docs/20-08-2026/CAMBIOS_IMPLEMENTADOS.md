@@ -26,7 +26,7 @@ tiene texto debajo de la figura.
 
 9/9 tests pasan (2 nuevos, `slow`, con Docling real).
 
-No comiteado ni desplegado todavía.
+Comiteado, pusheado y desplegado en producción.
 
 ## Pendiente
 
