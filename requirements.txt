@@ -1,0 +1,13 @@
+# Motores de conversión (instalar primero — arrastran su propio árbol de
+# dependencias con pydantic/httpx; el resto se resuelve alrededor de esto)
+docling
+markitdown[pdf]
+
+# FastAPI y servidor
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic-settings
+
+# Utilidades
+python-dotenv

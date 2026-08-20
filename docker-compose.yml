@@ -1,0 +1,32 @@
+services:
+  conversion:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: unicor_doc_conversion
+    env_file:
+      - .env
+    ports:
+      # Para pegarle directo en dev/debug. En producción, si backend_web_bot
+      # ya está en la misma red compartida, se puede quitar este mapeo —
+      # el container-to-container funciona igual por nombre de servicio.
+      - "8100:8100"
+    networks:
+      - net-shared-conversion
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8100/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  net-shared-conversion:
+    name: net-shared-conversion
+    driver: bridge
