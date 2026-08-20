@@ -51,6 +51,15 @@ docker build -t unicor-doc-conversion .
 docker run -p 8100:8100 --env-file .env unicor-doc-conversion
 ```
 
+## Despliegue en servidor (Ubuntu)
+
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+Verifica `.env` (lo crea desde `.env.example` si falta y avisa si `INTERNAL_API_KEY` quedó vacía o con el valor de ejemplo), construye la imagen, levanta el contenedor con `docker compose` y prueba `/health` y `/v1/engines`. La primera build tarda varios minutos (Docling trae PyTorch) — luego queda cacheada.
+
 ## Licencia
 
 [MIT](./LICENSE)
