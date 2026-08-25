@@ -1,0 +1,24 @@
+name: unicor_conversion_local
+
+services:
+  conversion:
+    build: .
+    environment:
+      INTERNAL_API_KEY: ${LOCAL_CONVERSION_KEY:-local-conversion-key}
+      DEBUG: "true"
+      ENABLE_DOCS: "true"
+      PYTHONUNBUFFERED: "1"
+    ports:
+      - "8100:8100"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8100/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    networks: [local]
+
+networks:
+  local:
+    name: bienestar-local
+    external: true
