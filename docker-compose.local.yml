@@ -19,6 +19,4 @@ services:
     networks: [local]
 
 networks:
-  local:
-    name: bienestar-local
-    external: true
+  local: {}
